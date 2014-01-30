@@ -1,6 +1,6 @@
 {
   "packages": {
     "router": {},
-    "visualcaptcha": {}
+    "VisualCaptcha": {}
   }
 }
