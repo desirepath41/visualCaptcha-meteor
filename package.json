@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "start": "meteor --port 8282"
+  },
+  "author": {
+    "name": "Fernando Doglio",
+    "email": "fernando@clevertech.biz"
+  }
+}
