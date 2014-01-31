@@ -5,7 +5,8 @@ A demo Meteor API that uses visualCaptcha package (which in turn uses the visual
 
 ## Installation
 
-+ Install meteorite if you haven't already `npm install -g meteorite`
++ Install meteor if you haven't already with: `$ curl https://install.meteor.com | /bin/sh`
++ Install meteorite if you haven't already with `npm install -g meteorite`
 + After cloning the repo, run `mrt install` to download all dependent packages.
 
 
