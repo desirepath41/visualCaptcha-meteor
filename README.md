@@ -4,7 +4,9 @@ A demo Meteor API that uses visualCaptcha package (which in turn uses the visual
 
 ## Starting it
 
-To start it, run `npm start` and it'll start the API server on port http://localhost:8282/
+After cloning the repo, run `mrt install` to download all packages.
+
+To start it, run `npm start` and it'll start the API server on http://localhost:8282/
 
 ## Trying it out
 
