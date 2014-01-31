@@ -1,3 +1,12 @@
 language: node_js
 node_js:
   - "0.10"
+branches:
+  only:
+    - master
+env:
+  global:
+    - secure: "zwTs7UqkW6fc2CmwInBVWI/zi4Zx0CGkXnFlCU9w+owc58y1U2GUtQXBHRIUcaf83bx4v8jZlWkOBiVnR3NcPX9jwgZmgDmbvS9tenMO2AuMZZcBGqB5ECRJaJKzsMqBw+l8QtRb/wID/3vd6AOXrWFo6BnKvvV2BA0KuyLEqs4="
+    - "REPOSITORY=visualcaptcha-node"
+after_success:
+    "curl --data 'deploy={\"repository\":\"'$REPOSITORY'\",\"branch\":\"'$TRAVIS_BRANCH'\"}' http://githooks.emotionloop.com/?k=$AUTH_KEY"

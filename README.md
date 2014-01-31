@@ -1,4 +1,4 @@
-# visualCaptcha Meteor API Demo
+# visualCaptcha Meteor API Demo [![Build Status](https://travis-ci.org/emotionLoop/visualCaptcha-meteor.png?branch=master)](https://travis-ci.org/emotionLoop/visualCaptcha-meteor)
 
 A demo Meteor API that uses visualCaptcha package (which in turn uses the visualcaptcha npm module), as a proof-of-concept for how to integrate it with your meteor project.
 
