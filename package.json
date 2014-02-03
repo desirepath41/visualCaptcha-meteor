@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "meteor --port 8282"
+    "start": "mrt --port 8282"
   },
   "author": {
     "name": "Fernando Doglio",
