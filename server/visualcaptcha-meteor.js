@@ -3,7 +3,7 @@ if (Meteor.isServer) {
   var VisualCaptcha = (VisualCaptcha != undefined) ? VisualCaptcha : null;
   Meteor.startup(function () {
     //Define the routes of the API
-    Meteor.Router.add("/", "POST", handleSubmit);
+    Meteor.Router.add("/try", "POST", handleSubmit);
     Meteor.Router.add("/audio/?:type?", "GET", getAudio);
     Meteor.Router.add("/image/:index",  "GET", getImage);
     Meteor.Router.add("/start/:howmany","GET", start)
@@ -18,11 +18,14 @@ if (Meteor.isServer) {
     var frontendData,
         howmany,
         redirectPath,
-        pathPrefix = this.request.headers.referer ;
+        pathPrefix = this.request.headers.referer.split("/")[0];
 
-    console.log(Npm.require("sys").inspect(this.request))
+    if(!pathPrefix.match(/\/$/)) {
+      pathPrefix += "/";
+    }
+
     if ( this.request.headers.referer.indexOf( '-jquery' ) ) {
-        pathPrefix = this.request.headers.referer + 'index-jquery.html';
+        pathPrefix += 'index-jquery.html';
     }
 
     // It's not impossible this method is called before VisualCaptcha is initialized, so we have to send a 404
@@ -87,7 +90,6 @@ if (Meteor.isServer) {
         return [result.errorCode, result.errorMsg];
       }
     } catch (er){ 
-      console.log(er);
       return [400, er.toString()]
     }
   }
