@@ -1,16 +1,52 @@
-if (Meteor.isServer) {
-  var session = {}; //global fake session for server side 
-  var VisualCaptcha = (VisualCaptcha != undefined) ? VisualCaptcha : null;
-  Meteor.startup(function () {
+
+    WebApp.connectHandlers.use(connect.cookieParser());
+    WebApp.connectHandlers.use(connect.session( {secret: 'pepe',  cookie: {secure:false}}));
+    WebApp.connectHandlers.use(function(req, res, next) {
+      console.log("lalala!");
+      next();
+    })
+
+var Session =  {
+      currentId: null,    
+      values: {},
+      countSessions: function() {
+        return Object.keys(this.values).length;
+      },
+      countElements: function() {
+        if( ! this.values[this.currentId] ) {
+          this.values[this.currentId] = {};
+        }
+        return Object.keys(this.values[this.currentId]).length;
+      },
+      set: function(k, v) {
+        if( ! this.values[this.currentId] ) {
+          this.values[this.currentId] = {};
+        }
+        this.values[this.currentId][k] = v;
+      },
+      get: function(k) {
+        if( ! this.values[this.currentId] ) {
+          return null;
+        } else {
+          return this.values[this.currentId][k];
+        }
+      }
+  }
+
+
+  console.log("Restarting 'session'");
+  var VisualCaptcha = ( VisualCaptcha != undefined ) ? VisualCaptcha : null;
+  Meteor.startup( function () {
     //Define the routes of the API
-    Meteor.Router.add("/try", "POST", handleSubmit);
-    Meteor.Router.add("/audio/?:type?", "GET", getAudio);
-    Meteor.Router.add("/image/:index",  "GET", getImage);
-    Meteor.Router.add("/start/:howmany","GET", start)
+    Meteor.Router.add( '/try' , 'POST', handleSubmit );
+    Meteor.Router.add( '/audio/?:type?' , 'GET' , getAudio );
+    Meteor.Router.add( '/image/:index' , 'GET' , getImage );
+    Meteor.Router.add( '/start/:howmany' , 'GET' , start )
+
   });
 
-  function allowCORS(res) {
-    res.setHeader("access-control-allow-origin", "*");
+  function allowCORS( res ) {
+    res.setHeader( 'access-control-allow-origin' , '*' );
   }
   
 
@@ -18,15 +54,16 @@ if (Meteor.isServer) {
     var frontendData,
         howmany,
         redirectPath,
-        pathPrefix = this.request.headers.referer.split("/")[0];
+        pathPrefix = this.request.headers.referer.split( '/' )[0];
 
-    if(!pathPrefix.match(/\/$/)) {
-      pathPrefix += "/";
+    if( !pathPrefix.match(/\/$/) ) {
+      pathPrefix += '/';
     }
 
     if ( this.request.headers.referer.indexOf( '-jquery' ) ) {
         pathPrefix += 'index-jquery.html';
     }
+  
 
     // It's not impossible this method is called before VisualCaptcha is initialized, so we have to send a 404
     if ( ! VisualCaptcha ) {
@@ -60,9 +97,9 @@ if (Meteor.isServer) {
     return [302];
   }
 
-  function getAudio(type) {
+  function getAudio( type ) {
     // It's not impossible this method is called before VisualCaptcha is initialized, so we have to send a 404
-    allowCORS(this.response);
+    allowCORS( this.response );
     if ( ! VisualCaptcha ) {
       return [ 404, 'Not Found' ];
     } else {
@@ -72,7 +109,7 @@ if (Meteor.isServer) {
       }
 
       var ret = VisualCaptcha.getAudio( this.response, type );
-      if(!ret.error) {
+      if( !ret.error ) {
         return [200, ret.audio];
       } else {
         return [ret.errorCode, ret.errorMsg];
@@ -80,11 +117,11 @@ if (Meteor.isServer) {
     }
   }
 
-  function getImage(idx) {
-    allowCORS(this.response);
+  function getImage( idx ) {
+    allowCORS( this.response );
     try {
-      var result = VisualCaptcha.getImage(idx, this.request.query.retina, this.response); 
-      if(!result.error) {
+      var result = VisualCaptcha.getImage( idx, this.request.query.retina, this.response ); 
+      if( ! result.error ) {
         return [200, result.image];
       } else {
         return [result.errorCode, result.errorMsg];
@@ -94,13 +131,27 @@ if (Meteor.isServer) {
     }
   }
 
-  function start(howmany) {
+  function start( howmany ) {
+    var key = new Date().getTime();
      // After initializing VisualCaptcha, we only need to generate new options
-    allowCORS(this.response);
-    if ( ! VisualCaptcha ) {
-        VisualCaptcha = new Meteor.VisualCaptcha(session);
-    }
+    allowCORS( this.response );
+    //console.log("--------------- SESSION!");
+    //console.log(this.request.session);
+    //console.log("-------------- SESSION!");
+   //if ( ! this.request.session.VisualCaptcha ) {//Session.get('VisualCaptcha') ) {
+        VisualCaptcha =  new Meteor.VisualCaptcha( this.request.session)
+    //}
+    var res = VisualCaptcha.start( howmany )
+  //console.log("--------------- SESSION AFTER!");
+    //console.log(this.request.session);
+    //console.log("-------------- SESSION after!");
 
-    return [200, VisualCaptcha.start( howmany )];
+    return [200, res];
   }
-}
+
+  Meteor.methods({
+    logSession: function(sid) {
+      console.log(sid);
+      Session.currentId = sid;
+    }
+  })
