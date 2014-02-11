@@ -7,6 +7,14 @@
   }
   var imageName = "";
 
+  Router.map(function () {
+    this.route('home', {
+      path: '/'
+    });
+    this.route('status', {
+      path: '/index-jquery.html'
+    });
+  });
 
   Template.sampleCaptcha.selectedWord = function() { 
     return Session.get("selectedWord");

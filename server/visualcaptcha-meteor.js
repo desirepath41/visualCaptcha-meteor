@@ -3,10 +3,27 @@ if (Meteor.isServer) {
   var VisualCaptcha = (VisualCaptcha != undefined) ? VisualCaptcha : null;
   Meteor.startup(function () {
     //Define the routes of the API
-    Meteor.Router.add("/try", "POST", handleSubmit);
-    Meteor.Router.add("/audio/?:type?", "GET", getAudio);
-    Meteor.Router.add("/image/:index",  "GET", getImage);
-    Meteor.Router.add("/start/:howmany","GET", start)
+    Router.map(function () {
+      this.route("try", {
+        where: 'server',
+        action: handleSubmit
+      });
+      this.route("audio", {
+        path: "/audio/?:type?",
+        where: 'server',
+        action: getAudio
+      });
+      this.route("image", {
+        path: "/image/:index",
+        where: 'server',
+        action: getImage
+      });
+      this.route("start", {
+        path: "/start/:howmany",
+        where: 'server',
+        action: start
+      });
+    });
   });
 
   function allowCORS(res) {
@@ -57,50 +74,58 @@ if (Meteor.isServer) {
     }
 
     this.response.setHeader( 'Location', pathPrefix + redirectPath );
-    return [302];
+    this.response.writeHead(302);
+    this.response.end();
   }
 
-  function getAudio(type) {
+  function getAudio() {
+    var type = this.params.type;
     // It's not impossible this method is called before VisualCaptcha is initialized, so we have to send a 404
     allowCORS(this.response);
     if ( ! VisualCaptcha ) {
-      return [ 404, 'Not Found' ];
+      this.response.writeHead(404);
+      this.response.end('Not Found');
     } else {
       // Default file type is mp3, but we need to support ogg as well
       if ( type !== 'ogg' ) {
           type = 'mp3';
       }
 
-      var ret = VisualCaptcha.getAudio( this.response, type );
-      if(!ret.error) {
-        return [200, ret.audio];
+      var result = VisualCaptcha.getAudio( this.response, type );
+      if(!result.error) {
+        this.response.writeHead(200);
+        this.response.end(result.audio);
       } else {
-        return [ret.errorCode, ret.errorMsg];
+        this.response.writeHead(result.errorCode);
+        this.response.end(result.errorMsg);
       }
     }
   }
 
-  function getImage(idx) {
+  function getImage() {
     allowCORS(this.response);
     try {
-      var result = VisualCaptcha.getImage(idx, this.request.query.retina, this.response); 
+      var result = VisualCaptcha.getImage(this.params.index, this.request.query.retina, this.response);
       if(!result.error) {
-        return [200, result.image];
+        this.response.writeHead(200);
+        this.response.end(result.image);
       } else {
-        return [result.errorCode, result.errorMsg];
+        this.response.writeHead(result.errorCode);
+        this.response.end(result.errorMsg);
       }
-    } catch (er){ 
-      return [400, er.toString()]
+    } catch (er){
+      this.response.writeHead(400);
+      this.response.end(er.toString());
     }
   }
 
-  function start(howmany) {
+  function start() {
      // After initializing VisualCaptcha, we only need to generate new options
     allowCORS(this.response);
     if ( ! VisualCaptcha ) {
         VisualCaptcha = new Meteor.VisualCaptcha(session);
     }
-
-    return [200, VisualCaptcha.start( howmany )];
+    this.response.writeHead(200);
+    this.response.end(VisualCaptcha.start( this.params.howmany ));
   }
 }

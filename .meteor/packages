@@ -7,5 +7,6 @@ standard-app-packages
 autopublish
 insecure
 preserve-inputs
-router
 VisualCaptcha
+iron-router
+http
