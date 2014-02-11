@@ -55,7 +55,9 @@
     </div>
   </template>
   <template name="statusMessage">
-    <div class="status {{msg.valid}}"> <div class="{{msg.css}}"></div> <p>{{msg.text}}</p> </div>
+      {{#if msg}}
+        <div class="status {{msg.valid}}"> <div class="{{msg.css}}"></div> <p>{{msg.text}}</p> </div>
+      {{/if}}
   </template>
 
   <template name="sampleCaptcha">
