@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/emotionLoop/visualCaptcha-meteor.png?branch=master)](https://travis-ci.org/emotionLoop/visualCaptcha-meteor)
+[![Build Status](https://travis-ci.org/emotionLoop/visualCaptcha-meteor.svg?branch=master)](https://travis-ci.org/emotionLoop/visualCaptcha-meteor)
 
 ## Deprecation notice
 
