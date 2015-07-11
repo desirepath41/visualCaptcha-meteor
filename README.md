@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/emotionLoop/visualCaptcha-meteor.svg?branch=master)](https://travis-ci.org/emotionLoop/visualCaptcha-meteor)
+[![Code Climate](https://codeclimate.com/github/emotionLoop/visualCaptcha-meteor/badges/gpa.svg)](https://codeclimate.com/github/emotionLoop/visualCaptcha-meteor)
 
 ## Deprecation notice
 
