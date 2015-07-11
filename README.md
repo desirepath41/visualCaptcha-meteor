@@ -1,4 +1,10 @@
-# visualCaptcha Meteor API Demo [![Build Status](https://travis-ci.org/emotionLoop/visualCaptcha-meteor.png?branch=master)](https://travis-ci.org/emotionLoop/visualCaptcha-meteor)
+[![Build Status](https://travis-ci.org/emotionLoop/visualCaptcha-meteor.png?branch=master)](https://travis-ci.org/emotionLoop/visualCaptcha-meteor)
+
+## Deprecation notice
+
+This version is now deprecated and unsupported. Meteor changed its API a lot and it has become impossible for us to focus on it for now.
+
+# visualCaptcha Meteor API Demo (deprecated)
 
 This is a demo Meteor that uses the [meteorite visualCaptcha package](https://github.com/emotionLoop/visualCaptcha-meteorite) and the [visualCaptcha jQuery plugin bower package](https://github.com/emotionLoop/visualCaptcha-frontend-jquery), as a proof-of-concept for how to integrate it with your Meteor project.
 
